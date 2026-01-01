@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ISSUER
+  RECRUITER
+}
+
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  credentials Credential[]
+  issuedCredentials Credential[] @relation("IssuerCredentials")
+}
+
+model Credential {
+  id            String   @id @default(uuid())
+  hash          String   @unique
+  filename      String
+  originalName  String
+  fileUrl       String   // S3 URL or local path
+  
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  
+  issuerId      String?
+  issuer        User?    @relation("IssuerCredentials", fields: [issuerId], references: [id])
+  
+  status        Status   @default(PENDING)
+  
+  txHash        String?  // Blockchain transaction hash
+  tokenId       String?  // NFT Token ID if applicable
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
