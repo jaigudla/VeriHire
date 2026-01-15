@@ -3,6 +3,8 @@ import multer from 'multer';
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
+import prisma from '../lib/prisma.js';
+import { ipfsService } from '../services/ipfs.service.js';
 
 const router = express.Router();
 
@@ -22,25 +24,50 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.post('/', upload.single('file'), (req, res) => {
+router.post('/', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
     }
 
     try {
-        // Calculate SHA-256 Hash
+        // 1. Calculate SHA-256 Hash
         const fileBuffer = fs.readFileSync(req.file.path);
         const hashSum = crypto.createHash('sha256');
         hashSum.update(fileBuffer);
         const hex = hashSum.digest('hex');
+        const hash = '0x' + hex; // Standardize for Blockchain (bytes32 usually expects 0x prefix if string)
 
-        // In a real app, we would save this metadata to the DB here
+        // 2. Upload to IPFS
+        const ipfsCid = await ipfsService.uploadFile(req.file.path);
+
+        // 3. Save to Database
+        // For now, ensure a test user exists (Implement proper Auth later)
+        const testUser = await prisma.user.upsert({
+            where: { email: 'demo@verihire.com' },
+            update: {},
+            create: {
+                email: 'demo@verihire.com',
+                role: 'RECRUITER' // or ISSUER
+            }
+        });
+
+        const credential = await prisma.credential.create({
+            data: {
+                hash: hash,
+                filename: req.file.filename,
+                originalName: req.file.originalname,
+                ipfsCid: ipfsCid,
+                userId: testUser.id,
+                status: 'PENDING'
+            }
+        });
 
         res.json({
-            message: 'File uploaded successfully',
+            message: 'File uploaded and processed successfully',
+            credentialId: credential.id,
+            hash: hash,
+            ipfsCid: ipfsCid,
             filename: req.file.filename,
-            hash: hex,
-            originalName: req.file.originalname,
         });
     } catch (error) {
         console.error(error);

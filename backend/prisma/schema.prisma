@@ -26,6 +26,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
+  walletAddress String?  @unique // Blockchain wallet address
+  
   credentials Credential[]
   issuedCredentials Credential[] @relation("IssuerCredentials")
 }
@@ -35,7 +37,8 @@ model Credential {
   hash          String   @unique
   filename      String
   originalName  String
-  fileUrl       String   // S3 URL or local path
+  s3Url         String?  // S3 URL
+  ipfsCid       String?  // IPFS CID
   
   userId        String
   user          User     @relation(fields: [userId], references: [id])

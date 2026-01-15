@@ -1,0 +1,79 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\jspgu\\Projects\\VeriHire\\smart-contracts\\contracts\\CredentialStore.sol": {
+      "lastModificationDate": 1768452985746,
+      "contentHash": "fa51a0f536ca181eb37063a1a21a818e",
+      "sourceName": "contracts/CredentialStore.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IssuerRegistry.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.24"
+      ],
+      "artifacts": [
+        "CredentialStore"
+      ]
+    },
+    "C:\\Users\\jspgu\\Projects\\VeriHire\\smart-contracts\\contracts\\IssuerRegistry.sol": {
+      "lastModificationDate": 1768452966738,
+      "contentHash": "b0ffa4b2958dae95778f664f7894aafa",
+      "sourceName": "contracts/IssuerRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.24"
+      ],
+      "artifacts": [
+        "IssuerRegistry"
+      ]
+    }
+  }
+}
